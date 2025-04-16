@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -6,8 +7,6 @@
   <title>Polinizadores em Ação</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
   <style>
     body {
       background: #fff8e1;
@@ -61,13 +60,9 @@
       background-color: #f4511e;
       border-color: #f4511e;
     }
-    #preview {
-      margin-top: 1rem;
-      max-width: 300px;
-      border-radius: 10px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    }
   </style>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
 </head>
 <body>
 
@@ -128,8 +123,8 @@
     <h4>Submeter Nova Observação</h4>
     <form id="submit-form" class="bg-white p-4 rounded shadow">
       <div class="mb-3">
-        <label class="form-label">Nome</label>
-        <input type="text" class="form-control" name="name" required>
+        <label class="form-label">Espécie</label>
+        <input type="text" class="form-control" name="species">
       </div>
       <div class="mb-3">
         <label class="form-label">Localização</label>
@@ -140,13 +135,11 @@
         <input type="date" class="form-control" name="date" required>
       </div>
       <div class="mb-3">
-        <label class="form-label">Inserir foto</label>
-        <input type="file" class="form-control" name="photo" accept="image/*" required>
+        <label class="form-label">Comentários adicionais</label>
+        <textarea class="form-control" name="notes"></textarea>
       </div>
-      <button type="submit" class="btn btn-success">Enviar Observação</button>
+      <button type="submit" class="btn btn-success">Baixar .CSV</button>
     </form>
-    <div id="upload-result" class="mt-4"></div>
-    <img id="preview" style="display:none" class="img-fluid" />
   </div>
 
   <footer class="text-center p-4 mt-5">
@@ -233,74 +226,31 @@
     document.getElementById("submit-form").addEventListener("submit", function(e) {
       e.preventDefault();
       const formData = new FormData(e.target);
-<<<<<<< HEAD
-=======
-      const file = formData.get("photo");
->>>>>>> caba12bd512f9c48bc908a11fe516d7884fc9bc7
-      const uploadResult = document.getElementById("upload-result");
-      const preview = document.getElementById("preview");
-
-      uploadResult.innerHTML = "<p>Enviando imagem...</p>";
-
-<<<<<<< HEAD
-      fetch("/api/upload", {
-        method: "POST",
-        body: formData
-      })
-      .then(res => res.json())
-      .then(data => {
-        if (data.success) {
-          uploadResult.innerHTML = `<p class='text-success'>Imagem enviada com sucesso! <br><a href="${data.url}" target="_blank">Ver imagem no GitHub</a></p>`;
-          preview.src = data.url;
-          preview.style.display = "block";
-        } else {
-          uploadResult.innerHTML = `<p class='text-danger'>Erro: ${JSON.stringify(data.error)}</p>`;
-          preview.style.display = "none";
-        }
-      })
-      .catch(err => {
-        console.error(err);
-        uploadResult.innerHTML = "<p class='text-danger'>Erro ao enviar imagem.</p>";
-        preview.style.display = "none";
-      });
-=======
-      const reader = new FileReader();
-      reader.onload = function () {
-        const base64 = reader.result.split(',')[1];
-        const filename = `uploads/${Date.now()}-${file.name}`;
-
-        fetch("https://api.github.com/repos/dcfonsecaa/polinizadoresuberlandia/contents/" + filename, {
-          method: "PUT",
-          headers: {
-            "Authorization": "token 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",
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({
-            message: "Nova imagem de observacao",
-            content: base64
-          })
-        })
-        .then(res => res.json())
-        .then(data => {
-          if (data.content && data.content.download_url) {
-            uploadResult.innerHTML = `<p class='text-success'>Imagem enviada com sucesso! <br><a href="${data.content.download_url}" target="_blank">Ver imagem no GitHub</a></p>`;
-            preview.src = data.content.download_url;
-            preview.style.display = "block";
-          } else {
-            uploadResult.innerHTML = `<p class='text-danger'>Erro ao enviar imagem: ${data.message}</p>`;
-            preview.style.display = "none";
-          }
-        })
-        .catch(err => {
-          console.error("Erro ao enviar imagem:", err);
-          uploadResult.innerHTML = "<p class='text-danger'>Erro ao enviar imagem.</p>";
-          preview.style.display = "none";
-        });
-      };
-      reader.readAsDataURL(file);
->>>>>>> caba12bd512f9c48bc908a11fe516d7884fc9bc7
+      const data = [
+        ["Espécie", "Localização", "Data", "Comentários"],
+        [
+          formData.get("species"),
+          formData.get("location"),
+          formData.get("date"),
+          formData.get("notes")
+        ]
+      ];
+      const csvContent = data.map(e => e.map(val => '"' + (val || '') + '"').join(",")).join("\n");
+      const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.setAttribute("href", url);
+      link.setAttribute("download", "observacao_polinizador.csv");
+      link.style.display = "none";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
     });
   </script>
+
+</body>
+</html>
+
 
 </body>
 </html>

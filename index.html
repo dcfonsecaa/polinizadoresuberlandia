@@ -233,7 +233,7 @@
         const base64 = reader.result.split(',')[1];
         const filename = `uploads/${Date.now()}-${file.name}`;
 
-        fetch("https://api.github.com/repos/dcfonsecaa/polinizadoresuberlândia/contents/" + filename, {
+        fetch("https://api.github.com/repos/dcfonsecaa/polinizadoresuberlandia/contents/" + filename, {
           method: "PUT",
           headers: {
             "Authorization": "token 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",

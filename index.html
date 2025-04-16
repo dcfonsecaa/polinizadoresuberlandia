@@ -233,12 +233,37 @@
     document.getElementById("submit-form").addEventListener("submit", function(e) {
       e.preventDefault();
       const formData = new FormData(e.target);
+<<<<<<< HEAD
+=======
       const file = formData.get("photo");
+>>>>>>> caba12bd512f9c48bc908a11fe516d7884fc9bc7
       const uploadResult = document.getElementById("upload-result");
       const preview = document.getElementById("preview");
 
       uploadResult.innerHTML = "<p>Enviando imagem...</p>";
 
+<<<<<<< HEAD
+      fetch("/api/upload", {
+        method: "POST",
+        body: formData
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          uploadResult.innerHTML = `<p class='text-success'>Imagem enviada com sucesso! <br><a href="${data.url}" target="_blank">Ver imagem no GitHub</a></p>`;
+          preview.src = data.url;
+          preview.style.display = "block";
+        } else {
+          uploadResult.innerHTML = `<p class='text-danger'>Erro: ${JSON.stringify(data.error)}</p>`;
+          preview.style.display = "none";
+        }
+      })
+      .catch(err => {
+        console.error(err);
+        uploadResult.innerHTML = "<p class='text-danger'>Erro ao enviar imagem.</p>";
+        preview.style.display = "none";
+      });
+=======
       const reader = new FileReader();
       reader.onload = function () {
         const base64 = reader.result.split(',')[1];
@@ -273,6 +298,7 @@
         });
       };
       reader.readAsDataURL(file);
+>>>>>>> caba12bd512f9c48bc908a11fe516d7884fc9bc7
     });
   </script>
 

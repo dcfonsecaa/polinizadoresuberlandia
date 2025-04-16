@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -61,6 +60,12 @@
     button.btn-success:hover {
       background-color: #f4511e;
       border-color: #f4511e;
+    }
+    #preview {
+      margin-top: 1rem;
+      max-width: 300px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
     }
   </style>
 </head>
@@ -140,6 +145,8 @@
       </div>
       <button type="submit" class="btn btn-success">Enviar Observação</button>
     </form>
+    <div id="upload-result" class="mt-4"></div>
+    <img id="preview" style="display:none" class="img-fluid" />
   </div>
 
   <footer class="text-center p-4 mt-5">
@@ -227,6 +234,10 @@
       e.preventDefault();
       const formData = new FormData(e.target);
       const file = formData.get("photo");
+      const uploadResult = document.getElementById("upload-result");
+      const preview = document.getElementById("preview");
+
+      uploadResult.innerHTML = "<p>Enviando imagem...</p>";
 
       const reader = new FileReader();
       reader.onload = function () {
@@ -240,18 +251,25 @@
             "Content-Type": "application/json"
           },
           body: JSON.stringify({
-            message: "Nova imagem de observação",
+            message: "Nova imagem de observacao",
             content: base64
           })
         })
         .then(res => res.json())
         .then(data => {
-          alert("Imagem enviada com sucesso para o GitHub!");
-          console.log(data);
+          if (data.content && data.content.download_url) {
+            uploadResult.innerHTML = `<p class='text-success'>Imagem enviada com sucesso! <br><a href="${data.content.download_url}" target="_blank">Ver imagem no GitHub</a></p>`;
+            preview.src = data.content.download_url;
+            preview.style.display = "block";
+          } else {
+            uploadResult.innerHTML = `<p class='text-danger'>Erro ao enviar imagem: ${data.message}</p>`;
+            preview.style.display = "none";
+          }
         })
         .catch(err => {
           console.error("Erro ao enviar imagem:", err);
-          alert("Erro ao enviar imagem.");
+          uploadResult.innerHTML = "<p class='text-danger'>Erro ao enviar imagem.</p>";
+          preview.style.display = "none";
         });
       };
       reader.readAsDataURL(file);

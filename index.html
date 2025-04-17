@@ -72,10 +72,13 @@
       <div class="col-md-4">
         <h4>Estatísticas</h4>
         <div class="row text-center">
-          <div class="col stats-box">1.783<br>Observações</div>
-          <div class="col stats-box">481<br>Espécies</div>
-          <div class="col stats-box">359<br>Identificadores</div>
-          <div class="col stats-box">174<br>Observadores</div>
+<h4>Estatísticas</h4>
+<div class="row text-center">
+  <div class="col stats-box"><span id="obs-count">...</span><br>Observações</div>
+  <div class="col stats-box"><span id="species-count">...</span><br>Espécies</div>
+  <div class="col stats-box"><span id="identifiers-count">...</span><br>Identificadores</div>
+  <div class="col stats-box"><span id="observers-count">...</span><br>Observadores</div>
+</div>
         </div>
       </div>
     </div>
@@ -218,6 +221,26 @@
 
     carregarObservacoes();
   </script>
+
+<script>
+  async function carregarEstatisticas() {
+    try {
+      const res = await fetch("https://api.inaturalist.org/v1/projects/polinizadores-em-acao-desafio-uberlandia");
+      const data = await res.json();
+      const projeto = data.results[0];
+
+      document.getElementById("obs-count").innerText = projeto.observations_count;
+      document.getElementById("species-count").innerText = projeto.species_count;
+      document.getElementById("identifiers-count").innerText = projeto.identifiers_count;
+      document.getElementById("observers-count").innerText = projeto.observers_count;
+    } catch (error) {
+      console.error("Erro ao carregar estatísticas do projeto:", error);
+    }
+  }
+
+  carregarEstatisticas();
+</script>
+
 </body>
 </html>
 

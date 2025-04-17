@@ -119,137 +119,39 @@
     <canvas id="speciesChart"></canvas>
   </div>
 
-  <div class="container mt-5">
-    <h4>Submeter Nova Observação</h4>
-    <form id="submit-form" class="bg-white p-4 rounded shadow">
-      <div class="mb-3">
-        <label class="form-label">Espécie</label>
-        <input type="text" class="form-control" name="species">
-      </div>
-      <div class="mb-3">
-        <label class="form-label">Localização</label>
-        <input type="text" class="form-control" name="location" required>
-      </div>
-      <div class="mb-3">
-        <label class="form-label">Data da observação</label>
-        <input type="date" class="form-control" name="date" required>
-      </div>
-      <div class="mb-3">
-        <label class="form-label">Comentários adicionais</label>
-        <textarea class="form-control" name="notes"></textarea>
-      </div>
-      <button type="submit" class="btn btn-success">Baixar .CSV</button>
-    </form>
-  </div>
+<div class="container mt-5">
+  <h4>Submeter Nova Observação</h4>
+  <form id="submit-form" class="bg-white p-4 rounded shadow">
+    <div class="mb-3">
+      <label class="form-label">Nome</label>
+      <input type="text" class="form-control" name="nome" required>
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Localização</label>
+      <input type="text" class="form-control" name="location" required>
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Data da observação</label>
+      <input type="date" class="form-control" name="date" required>
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Comentários adicionais</label>
+      <textarea class="form-control" name="notes" rows="3"></textarea>
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Anexar foto(s)</label>
+      <input type="file" class="form-control" name="photos" multiple accept="image/*">
+    </div>
+  </form>
+</div>
 
   <footer class="text-center p-4 mt-5">
     <p class="mb-0">&copy; 2025 Desenvolvido por Denis Fonseca</p>
   </footer>
 
-  <script>
-    const container = document.querySelector("#obs-container");
-    const map = L.map('map').setView([-18.9186, -48.2772], 12);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: 'Map data &copy; OpenStreetMap contributors'
-    }).addTo(map);
-
-    const speciesCounts = {};
-
-    function carregarObservacoes(taxonId = "all") {
-      container.innerHTML = "<p>Carregando observações...</p>";
-      map.eachLayer(layer => {
-        if (layer instanceof L.Marker) map.removeLayer(layer);
-      });
-
-      const taxonFilter = taxonId === "all"
-        ? "taxon_id=630955&taxon_id=47157&taxon_id=4921&taxon_id=47604&taxon_id=49997&taxon_id=40151"
-        : `taxon_id=${taxonId}`;
-      const apiUrl = `https://api.inaturalist.org/v1/observations?project_id=polinizadores-em-acao-desafio-uberlandia&per_page=30&${taxonFilter}`;
-
-      fetch(apiUrl)
-        .then(response => response.json())
-        .then(data => {
-          container.innerHTML = "";
-          Object.keys(speciesCounts).forEach(key => delete speciesCounts[key]);
-
-          data.results.forEach(obs => {
-            const img = obs.photos[0]?.url.replace("square", "medium");
-            const card = `
-              <div class="col-md-3">
-                <div class="card obs-card">
-                  <img src="${img}" alt="${obs.species_guess}" class="img-fluid rounded">
-                  <div class="card-body">
-                    <h6>${obs.species_guess || 'Espécie desconhecida'}</h6>
-                    <small>Observado em: ${obs.observed_on}</small>
-                  </div>
-                </div>
-              </div>`;
-            container.innerHTML += card;
-
-            if (obs.geojson) {
-              const marker = L.marker([obs.geojson.coordinates[1], obs.geojson.coordinates[0]]);
-              marker.addTo(map).bindPopup(obs.species_guess || 'Espécie desconhecida');
-            }
-
-            const name = obs.species_guess || "Desconhecida";
-            speciesCounts[name] = (speciesCounts[name] || 0) + 1;
-          });
-
-          const topSpecies = Object.entries(speciesCounts).sort((a,b) => b[1] - a[1]).slice(0, 5);
-          const speciesNames = topSpecies.map(s => s[0]);
-          const speciesValues = topSpecies.map(s => s[1]);
-
-          new Chart(document.getElementById("speciesChart"), {
-            type: 'bar',
-            data: {
-              labels: speciesNames,
-              datasets: [{
-                label: 'Observações',
-                data: speciesValues,
-                backgroundColor: 'rgba(255, 112, 67, 0.6)'
-              }]
-            }
-          });
-        })
-        .catch(error => {
-          container.innerHTML = '<p class="text-danger">Erro ao carregar observações.</p>';
-          console.error("Erro ao buscar dados do iNaturalist:", error);
-        });
-    }
-
-    document.getElementById("taxonSelect").addEventListener("change", function() {
-      carregarObservacoes(this.value);
-    });
-
-    carregarObservacoes();
-
-    document.getElementById("submit-form").addEventListener("submit", function(e) {
-      e.preventDefault();
-      const formData = new FormData(e.target);
-      const data = [
-        ["Espécie", "Localização", "Data", "Comentários"],
-        [
-          formData.get("species"),
-          formData.get("location"),
-          formData.get("date"),
-          formData.get("notes")
-        ]
-      ];
-      const csvContent = data.map(e => e.map(val => '"' + (val || '') + '"').join(",")).join("\n");
-      const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
-      const url = URL.createObjectURL(blob);
-      const link = document.createElement("a");
-      link.setAttribute("href", url);
-      link.setAttribute("download", "observacao_polinizador.csv");
-      link.style.display = "none";
-      document.body.appendChild(link);
-      link.click();
-      document.body.removeChild(link);
-    });
-  </script>
-
 </body>
 </html>
+>
 
 
 </body>

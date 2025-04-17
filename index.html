@@ -156,9 +156,7 @@
         if (layer instanceof L.Marker) map.removeLayer(layer);
       });
 
-      const taxonFilter = taxonId === "all"
-        ? "taxon_id=630955&taxon_id=47157&taxon_id=4921&taxon_id=47604&taxon_id=49997&taxon_id=40151"
-        : `taxon_id=${taxonId}`;
+      const taxonFilter = taxonId === "all" ? "" : `taxon_id=${taxonId}`;
       const apiUrl = `https://api.inaturalist.org/v1/observations?project_id=polinizadores-em-acao-desafio-uberlandia&per_page=30&${taxonFilter}`;
 
       fetch(apiUrl)
@@ -252,3 +250,4 @@
 
 </body>
 </html>
+

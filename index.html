@@ -57,185 +57,190 @@
   </style>
 </head>
 <body>
+<div class="hero">
+  <h1>Projeto Polinizadores em Ação</h1>
+  <p class="lead">Desafio Uberlândia - Monitoramento coletivo de polinizadores</p>
+</div>
 
-  <div class="hero">
-    <h1>Projeto Polinizadores em Ação</h1>
-    <p class="lead">Desafio Uberlândia - Monitoramento coletivo de polinizadores</p>
-  </div>
-
-  <div class="container about-section">
-    <div class="row">
-      <div class="col-md-8">
-        <h4>Sobre</h4>
-        <p>O projeto "Polinizadores em Ação" é uma iniciativa de Ciência Cidadã da Universidade Federal de Uberlândia (UFU), promovida pelo Laboratório de Morfologia e Microscopia Vegetal (LAMOVI).</p>
-      </div>
-      <div class="col-md-4">
-        <h4>Estatísticas</h4>
-        <div class="row text-center">
-          <div class="col stats-box"><span id="obs-count">...</span><br>Observações</div>
-          <div class="col stats-box"><span id="species-count">...</span><br>Espécies</div>
-          <div class="col stats-box"><span id="identifiers-count">...</span><br>Identificadores</div>
-          <div class="col stats-box"><span id="observers-count">...</span><br>Observadores</div>
-        </div>
+<div class="container about-section">
+  <div class="row">
+    <div class="col-md-8">
+      <h4>Sobre</h4>
+      <p>O projeto "Polinizadores em Ação" é uma iniciativa de Ciência Cidadã da Universidade Federal de Uberlândia (UFU), promovida pelo Laboratório de Morfologia e Microscopia Vegetal (LAMOVI).</p>
+    </div>
+    <div class="col-md-4">
+      <h4>Estatísticas</h4>
+      <div class="row text-center">
+        <div class="col stats-box"><span id="obs-count">...</span><br>Observações</div>
+        <div class="col stats-box"><span id="species-count">...</span><br>Espécies</div>
+        <div class="col stats-box"><span id="identifiers-count">...</span><br>Identificadores</div>
+        <div class="col stats-box"><span id="observers-count">...</span><br>Observadores</div>
       </div>
     </div>
   </div>
+</div>
 
-  <div class="container mt-4">
-    <label for="taxonSelect" class="form-label">Filtrar por grupo de polinizador:</label>
-    <select id="taxonSelect" class="form-select">
-      <option value="all">Todos</option>
-      <option value="630955">Abelhas</option>
-      <option value="47157">Borboletas</option>
-      <option value="4921">Beija-flores</option>
-      <option value="47604">Vespas</option>
-      <option value="49997">Moscas das flores</option>
-      <option value="40151">Morcegos</option>
-    </select>
+<div class="container mt-4">
+  <label for="taxonSelect" class="form-label">Filtrar por grupo de polinizador:</label>
+  <select id="taxonSelect" class="form-select">
+    <option value="all">Todos</option>
+    <option value="630955">Abelhas</option>
+    <option value="47157">Borboletas</option>
+    <option value="4921">Beija-flores</option>
+    <option value="47604">Vespas</option>
+    <option value="49997">Moscas das flores</option>
+    <option value="40151">Morcegos</option>
+  </select>
+</div>
+
+<div class="container mt-5">
+  <h4>Observações Recentes</h4>
+  <div class="row g-3" id="obs-container">
+    <p>Carregando observações...</p>
   </div>
+</div>
 
-  <div class="container mt-5">
-    <h4>Observações Recentes</h4>
-    <div class="row g-3" id="obs-container">
-      <p>Carregando observações...</p>
+<div class="container mt-5">
+  <h4>Mapa de Observações</h4>
+  <div id="map"></div>
+</div>
+
+<div class="container mt-5">
+  <h4>Espécies Mais Observadas</h4>
+  <canvas id="speciesChart"></canvas>
+</div>
+
+<!-- FORMULÁRIO AQUI -->
+
+<div class="container mt-5">
+  <h4>Submeter Nova Observação</h4>
+  <form id="upload-form" class="bg-white p-4 rounded shadow">
+    <div class="mb-3">
+      <label class="form-label">Nome</label>
+      <input type="text" class="form-control" name="nome" required />
     </div>
+    <div class="mb-3">
+      <label class="form-label">Localização</label>
+      <input type="text" class="form-control" name="location" required />
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Data da observação</label>
+      <input type="date" class="form-control" name="date" required />
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Comentários adicionais</label>
+      <textarea class="form-control" name="notes" rows="3"></textarea>
+    </div>
+    <div class="mb-3">
+      <label class="form-label">Anexar foto(s)</label>
+      <input type="file" class="form-control" id="photo-upload" accept="image/*" required />
+    </div>
+    <button type="submit" class="btn btn-primary">Enviar</button>
+  </form>
+
+  <div class="mt-4" id="upload-result" style="display: none;">
+    <h5>Imagem enviada:</h5>
+    <img id="uploaded-image" class="img-fluid rounded shadow" style="max-height: 300px;" />
+    <p class="mt-2">URL: <a href="#" id="image-url" target="_blank"></a></p>
   </div>
+</div>
 
-  <div class="container mt-5">
-    <h4>Mapa de Observações</h4>
-    <div id="map"></div>
-  </div>
 
-  <div class="container mt-5">
-    <h4>Espécies Mais Observadas</h4>
-    <canvas id="speciesChart"></canvas>
-  </div>
+<footer class="text-center p-4 mt-5">
+  <p class="mb-0">&copy; 2025 Desenvolvido por Denis Fonseca</p>
+</footer>
 
-  <div class="container mt-5">
-    <h4>Submeter Nova Observação</h4>
-    <form id="submit-form" class="bg-white p-4 rounded shadow">
-      <div class="mb-3">
-        <label class="form-label">Nome</label>
-        <input type="text" class="form-control" name="nome" required>
-      </div>
-      <div class="mb-3">
-        <label class="form-label">Localização</label>
-        <input type="text" class="form-control" name="location" required>
-      </div>
-      <div class="mb-3">
-        <label class="form-label">Data da observação</label>
-        <input type="date" class="form-control" name="date" required>
-      </div>
-      <div class="mb-3">
-        <label class="form-label">Comentários adicionais</label>
-        <textarea class="form-control" name="notes"></textarea>
-      </div>
-      <div class="mb-3">
-        <label class="form-label">Anexar foto(s)</label>
-        <input type="file" class="form-control" name="photos" multiple accept="image/*">
-      </div>
-    </form>
-  </div>
+<script>
+  const container = document.querySelector("#obs-container");
+  const map = L.map('map').setView([-18.9186, -48.2772], 12);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    attribution: 'Map data &copy; OpenStreetMap contributors'
+  }).addTo(map);
 
-  <footer class="text-center p-4 mt-5">
-    <p class="mb-0">&copy; 2025 Desenvolvido por Denis Fonseca</p>
-  </footer>
+  const speciesCounts = {};
 
-  <script>
-    const container = document.querySelector("#obs-container");
-    const map = L.map('map').setView([-18.9186, -48.2772], 12);
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-      attribution: 'Map data &copy; OpenStreetMap contributors'
-    }).addTo(map);
-
-    const speciesCounts = {};
-
-    function carregarObservacoes(taxonId = "all") {
-      container.innerHTML = "<p>Carregando observações...</p>";
-      map.eachLayer(layer => {
-        if (layer instanceof L.Marker) map.removeLayer(layer);
-      });
-
-      const taxonFilter = taxonId === "all" ? "" : `taxon_id=${taxonId}`;
-      const apiUrl = `https://api.inaturalist.org/v1/observations?project_id=polinizadores-em-acao-desafio-uberlandia&per_page=30&${taxonFilter}`;
-
-      fetch(apiUrl)
-        .then(response => response.json())
-        .then(data => {
-          container.innerHTML = "";
-          Object.keys(speciesCounts).forEach(key => delete speciesCounts[key]);
-
-          data.results.forEach(obs => {
-            const img = obs.photos[0]?.url.replace("square", "medium");
-            const card = `
-              <div class="col-md-3">
-                <div class="card obs-card">
-                  <img src="${img}" alt="${obs.species_guess}" class="img-fluid rounded">
-                  <div class="card-body">
-                    <h6>${obs.species_guess || 'Espécie desconhecida'}</h6>
-                    <small>Observado em: ${obs.observed_on}</small>
-                  </div>
-                </div>
-              </div>`;
-            container.innerHTML += card;
-
-            if (obs.geojson) {
-              const marker = L.marker([obs.geojson.coordinates[1], obs.geojson.coordinates[0]]);
-              marker.addTo(map).bindPopup(obs.species_guess || 'Espécie desconhecida');
-            }
-
-            const name = obs.species_guess || "Desconhecida";
-            speciesCounts[name] = (speciesCounts[name] || 0) + 1;
-          });
-
-          const topSpecies = Object.entries(speciesCounts).sort((a,b) => b[1] - a[1]).slice(0, 5);
-          const speciesNames = topSpecies.map(s => s[0]);
-          const speciesValues = topSpecies.map(s => s[1]);
-
-          new Chart(document.getElementById("speciesChart"), {
-            type: 'bar',
-            data: {
-              labels: speciesNames,
-              datasets: [{
-                label: 'Observações',
-                data: speciesValues,
-                backgroundColor: 'rgba(255, 112, 67, 0.6)'
-              }]
-            }
-          });
-        })
-        .catch(error => {
-          container.innerHTML = '<p class="text-danger">Erro ao carregar observações.</p>';
-          console.error("Erro ao buscar dados do iNaturalist:", error);
-        });
-    }
-
-    document.getElementById("taxonSelect").addEventListener("change", function() {
-      carregarObservacoes(this.value);
+  function carregarObservacoes(taxonId = "all") {
+    container.innerHTML = "<p>Carregando observações...</p>";
+    map.eachLayer(layer => {
+      if (layer instanceof L.Marker) map.removeLayer(layer);
     });
 
-    carregarObservacoes();
-  </script>
+    const taxonFilter = taxonId === "all" ? "" : `taxon_id=${taxonId}`;
+    const apiUrl = `https://api.inaturalist.org/v1/observations?project_id=polinizadores-em-acao-desafio-uberlandia&per_page=30&${taxonFilter}`;
+
+    fetch(apiUrl)
+      .then(response => response.json())
+      .then(data => {
+        container.innerHTML = "";
+        Object.keys(speciesCounts).forEach(key => delete speciesCounts[key]);
+
+        data.results.forEach(obs => {
+          const img = obs.photos[0]?.url.replace("square", "medium");
+          const card = `
+            <div class="col-md-3">
+              <div class="card obs-card">
+                <img src="${img}" alt="${obs.species_guess}" class="img-fluid rounded">
+                <div class="card-body">
+                  <h6>${obs.species_guess || 'Espécie desconhecida'}</h6>
+                  <small>Observado em: ${obs.observed_on}</small>
+                </div>
+              </div>
+            </div>`;
+          container.innerHTML += card;
+
+          if (obs.geojson) {
+            const marker = L.marker([obs.geojson.coordinates[1], obs.geojson.coordinates[0]]);
+            marker.addTo(map).bindPopup(obs.species_guess || 'Espécie desconhecida');
+          }
+
+          const name = obs.species_guess || "Desconhecida";
+          speciesCounts[name] = (speciesCounts[name] || 0) + 1;
+        });
+
+        const topSpecies = Object.entries(speciesCounts).sort((a,b) => b[1] - a[1]).slice(0, 5);
+        const speciesNames = topSpecies.map(s => s[0]);
+        const speciesValues = topSpecies.map(s => s[1]);
+
+        new Chart(document.getElementById("speciesChart"), {
+          type: 'bar',
+          data: {
+            labels: speciesNames,
+            datasets: [{
+              label: 'Observações',
+              data: speciesValues,
+              backgroundColor: 'rgba(255, 112, 67, 0.6)'
+            }]
+          }
+        });
+      })
+      .catch(error => {
+        container.innerHTML = '<p class="text-danger">Erro ao carregar observações.</p>';
+        console.error("Erro ao buscar dados do iNaturalist:", error);
+      });
+  }
+
+  document.getElementById("taxonSelect").addEventListener("change", function() {
+    carregarObservacoes(this.value);
+  });
+
+  carregarObservacoes();
+</script>
 
 <script>
   async function carregarEstatisticasReais() {
     try {
-      // Total de observações (paginação com total_entries)
       const resObs = await fetch("https://api.inaturalist.org/v1/observations?project_id=polinizadores-em-acao-desafio-uberlandia&per_page=1");
       const dataObs = await resObs.json();
       document.getElementById("obs-count").innerText = dataObs.total_results;
 
-      // Total de espécies únicas
       const resSpecies = await fetch("https://api.inaturalist.org/v1/observations/species_counts?project_id=polinizadores-em-acao-desafio-uberlandia");
       const dataSpecies = await resSpecies.json();
       document.getElementById("species-count").innerText = dataSpecies.total_results;
 
-      // Total de observadores
       const resObservers = await fetch("https://api.inaturalist.org/v1/observations/observers?project_id=polinizadores-em-acao-desafio-uberlandia");
       const dataObservers = await resObservers.json();
       document.getElementById("observers-count").innerText = dataObservers.total_results;
 
-      // Total de identificadores
       const resIdentifiers = await fetch("https://api.inaturalist.org/v1/observations/identifiers?project_id=polinizadores-em-acao-desafio-uberlandia");
       const dataIdentifiers = await resIdentifiers.json();
       document.getElementById("identifiers-count").innerText = dataIdentifiers.total_results;
@@ -248,6 +253,65 @@
   carregarEstatisticasReais();
 </script>
 
+<!-- SCRIPT UPLOAD CLOUDINARY -->
+
+<script>
+  const form = document.getElementById('upload-form');
+  const photoInput = document.getElementById('photo-upload');
+  const resultBox = document.getElementById('upload-result');
+  const uploadedImage = document.getElementById('uploaded-image');
+  const imageUrlLink = document.getElementById('image-url');
+
+  const csvData = [["Nome", "Localização", "Data", "Comentários", "URL da Imagem"]];
+
+  form.addEventListener('submit', async function(e) {
+    e.preventDefault();
+    const file = photoInput.files[0];
+    if (!file) return alert("Selecione uma imagem");
+
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("upload_preset", "observacoes_publicas");
+
+    const response = await fetch("https://api.cloudinary.com/v1_1/dxcrib6na/image/upload", {
+      method: "POST",
+      body: formData
+    });
+
+    const data = await response.json();
+    if (data.secure_url) {
+      resultBox.style.display = 'block';
+      uploadedImage.src = data.secure_url;
+      imageUrlLink.href = data.secure_url;
+      imageUrlLink.textContent = data.secure_url;
+
+      // Captura os dados do formulário
+      const nome = form.elements["nome"].value;
+      const location = form.elements["location"].value;
+      const date = form.elements["date"].value;
+      const notes = form.elements["notes"].value;
+      const imgUrl = data.secure_url;
+
+      // Adiciona ao CSV
+      csvData.push([nome, location, date, notes, imgUrl]);
+
+      // Gera o CSV e baixa
+      let csvContent = csvData.map(e => e.map(cell => `"${cell}"`).join(",")).join("\n");
+      const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.setAttribute("href", url);
+      link.setAttribute("download", "observacoes_polinizadores.csv");
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    } else {
+      alert("Erro ao enviar imagem.");
+      console.error(data);
+    }
+  });
+</script>
+
+
 </body>
 </html>
-

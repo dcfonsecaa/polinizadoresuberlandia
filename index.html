@@ -72,13 +72,10 @@
       <div class="col-md-4">
         <h4>Estatísticas</h4>
         <div class="row text-center">
-<h4>Estatísticas</h4>
-<div class="row text-center">
-  <div class="col stats-box"><span id="obs-count">...</span><br>Observações</div>
-  <div class="col stats-box"><span id="species-count">...</span><br>Espécies</div>
-  <div class="col stats-box"><span id="identifiers-count">...</span><br>Identificadores</div>
-  <div class="col stats-box"><span id="observers-count">...</span><br>Observadores</div>
-</div>
+          <div class="col stats-box"><span id="obs-count">...</span><br>Observações</div>
+          <div class="col stats-box"><span id="species-count">...</span><br>Espécies</div>
+          <div class="col stats-box"><span id="identifiers-count">...</span><br>Identificadores</div>
+          <div class="col stats-box"><span id="observers-count">...</span><br>Observadores</div>
         </div>
       </div>
     </div>
@@ -223,24 +220,35 @@
   </script>
 
 <script>
-  async function carregarEstatisticas() {
+  async function carregarEstatisticasReais() {
     try {
-      const res = await fetch("https://api.inaturalist.org/v1/projects/polinizadores-em-acao-desafio-uberlandia");
-      const data = await res.json();
-      const projeto = data.results[0];
+      // Total de observações (paginação com total_entries)
+      const resObs = await fetch("https://api.inaturalist.org/v1/observations?project_id=polinizadores-em-acao-desafio-uberlandia&per_page=1");
+      const dataObs = await resObs.json();
+      document.getElementById("obs-count").innerText = dataObs.total_results;
 
-      document.getElementById("obs-count").innerText = projeto.observations_count;
-      document.getElementById("species-count").innerText = projeto.species_count;
-      document.getElementById("identifiers-count").innerText = projeto.identifiers_count;
-      document.getElementById("observers-count").innerText = projeto.observers_count;
+      // Total de espécies únicas
+      const resSpecies = await fetch("https://api.inaturalist.org/v1/observations/species_counts?project_id=polinizadores-em-acao-desafio-uberlandia");
+      const dataSpecies = await resSpecies.json();
+      document.getElementById("species-count").innerText = dataSpecies.total_results;
+
+      // Total de observadores
+      const resObservers = await fetch("https://api.inaturalist.org/v1/observations/observers?project_id=polinizadores-em-acao-desafio-uberlandia");
+      const dataObservers = await resObservers.json();
+      document.getElementById("observers-count").innerText = dataObservers.total_results;
+
+      // Total de identificadores
+      const resIdentifiers = await fetch("https://api.inaturalist.org/v1/observations/identifiers?project_id=polinizadores-em-acao-desafio-uberlandia");
+      const dataIdentifiers = await resIdentifiers.json();
+      document.getElementById("identifiers-count").innerText = dataIdentifiers.total_results;
+
     } catch (error) {
-      console.error("Erro ao carregar estatísticas do projeto:", error);
+      console.error("Erro ao carregar estatísticas detalhadas:", error);
     }
   }
 
-  carregarEstatisticas();
+  carregarEstatisticasReais();
 </script>
 
 </body>
 </html>
-
